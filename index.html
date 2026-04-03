@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>토도 견적 계산기</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -13,7 +12,6 @@
       color: #1a1a1a;
       padding: 32px 20px;
     }
-
     .calc-section {
       background: #fff;
       border-radius: 12px;
@@ -22,202 +20,44 @@
       max-width: 680px;
       margin: 0 auto 20px;
     }
-    .calc-section h2 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: #1a1a1a;
-    }
-    .school-input-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .school-input-wrap label {
-      font-size: 14px;
-      color: #555;
-      white-space: nowrap;
-      min-width: 60px;
-    }
+    .calc-section h2 { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #1a1a1a; }
+    .school-input-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .school-input-wrap label { font-size: 14px; color: #555; white-space: nowrap; min-width: 60px; }
     .school-input-wrap input[type=text] {
-      flex: 1;
-      padding: 8px 12px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      color: #1a1a1a;
-      outline: none;
+      flex: 1; padding: 8px 12px; font-size: 14px;
+      border: 1px solid #ddd; border-radius: 6px; color: #1a1a1a; outline: none;
     }
     .school-input-wrap input[type=text]:focus { border-color: #aaa; }
-
     table { width: 100%; border-collapse: collapse; }
-    th {
-      font-size: 12px;
-      font-weight: 500;
-      color: #888;
-      text-align: left;
-      padding: 8px 10px;
-      border-bottom: 1px solid #e8e8e8;
-    }
+    th { font-size: 12px; font-weight: 500; color: #888; text-align: left; padding: 8px 10px; border-bottom: 1px solid #e8e8e8; }
     th.center { text-align: center; }
     th.right { text-align: right; }
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 14px;
-      color: #1a1a1a;
-      vertical-align: middle;
-    }
+    td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #1a1a1a; vertical-align: middle; }
     td.center { text-align: center; }
     td.right { text-align: right; }
     .product-name { font-weight: 500; font-size: 14px; }
     .unit-price { font-size: 12px; color: #999; margin-top: 2px; }
     input[type=number] {
-      width: 60px;
-      padding: 6px 4px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: #fff;
-      color: #1a1a1a;
-      text-align: center;
-      outline: none;
-      display: block;
-      margin: 0 auto;
+      width: 60px; padding: 6px 4px; font-size: 14px;
+      border: 1px solid #ddd; border-radius: 6px;
+      background: #fff; color: #1a1a1a; text-align: center;
+      outline: none; display: block; margin: 0 auto;
     }
     input[type=number]:focus { border-color: #aaa; }
     .row-total { font-weight: 500; font-size: 14px; }
-    .divider-row td {
-      border-top: 1.5px solid #ccc;
-      border-bottom: none;
-      padding-top: 14px;
-      padding-bottom: 8px;
-    }
+    .divider-row td { border-top: 1.5px solid #ccc; border-bottom: none; padding-top: 14px; padding-bottom: 8px; }
     .total-label { font-weight: 500; font-size: 15px; }
     .total-amount { font-size: 20px; font-weight: 600; }
-    .notice {
-      margin-top: 16px;
-      padding: 10px 14px;
-      background: #eef4fd;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #2a5caa;
-      line-height: 1.6;
-    }
+    .notice { margin-top: 16px; padding: 10px 14px; background: #eef4fd; border-radius: 8px; font-size: 13px; color: #2a5caa; line-height: 1.6; }
     .notice-example { color: #666; font-size: 12px; margin-top: 4px; }
-
-    .btn-wrap {
-      display: flex;
-      gap: 10px;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-    .btn-reset {
-      flex: 1;
-      padding: 10px;
-      font-size: 14px;
-      color: #888;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    .btn-wrap { display: flex; gap: 10px; max-width: 680px; margin: 0 auto; }
+    .btn-reset { flex: 1; padding: 10px; font-size: 14px; color: #888; background: #fff; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
     .btn-reset:hover { background: #f5f5f5; }
-    .btn-pdf {
-      flex: 2;
-      padding: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #fff;
-      background: #2f2b6b;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    .btn-pdf { flex: 2; padding: 10px; font-size: 14px; font-weight: 500; color: #fff; background: #2f2b6b; border: none; border-radius: 8px; cursor: pointer; }
     .btn-pdf:hover { background: #3d3894; }
-
-    /* 견적서 PDF용 */
-    #quote-doc {
-      display: none;
-      width: 794px;
-      padding: 60px 60px 40px;
-      background: #fff;
-      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-      font-size: 12px;
-      color: #111;
-    }
-    .q-title {
-      text-align: center;
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: 12px;
-      margin-bottom: 32px;
-    }
-    .q-info-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 24px;
-    }
-    .q-info-table td {
-      border: 1px solid #bbb;
-      padding: 7px 10px;
-      font-size: 12px;
-      vertical-align: middle;
-    }
-    .q-info-table .label {
-      background: #f0f0f0;
-      font-weight: 600;
-      text-align: center;
-      width: 90px;
-      white-space: nowrap;
-    }
-    .q-info-table .supplier-label {
-      background: #f0f0f0;
-      font-weight: 600;
-      text-align: center;
-      width: 30px;
-      writing-mode: vertical-rl;
-      white-space: nowrap;
-    }
-    .logo-cell {
-      text-align: right;
-      vertical-align: middle;
-      padding: 4px 10px;
-    }
-    .logo-cell img { height: 34px; width: auto; }
-    .q-items-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .q-items-table th {
-      background: #e8e8e8;
-      border: 1px solid #bbb;
-      padding: 7px 6px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .q-items-table td {
-      border: 1px solid #bbb;
-      padding: 7px 6px;
-      text-align: center;
-      font-size: 12px;
-      vertical-align: middle;
-    }
-    .q-total-row td {
-      background: #d9d9d9;
-      font-weight: 700;
-      font-size: 13px;
-      border: 1px solid #bbb;
-      padding: 9px 6px;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
-
-  <!-- 계산기 입력 영역 -->
   <div class="calc-section">
     <h2>견적 계산기</h2>
     <div class="school-input-wrap">
@@ -235,28 +75,19 @@
       </thead>
       <tbody>
         <tr>
-          <td>
-            <div class="product-name">토도한글</div>
-            <div class="unit-price">월 13,500원/명</div>
-          </td>
+          <td><div class="product-name">토도한글</div><div class="unit-price">월 13,500원/명</div></td>
           <td class="center"><input type="number" id="months-0" min="0" value="0" oninput="calc()"></td>
           <td class="center"><input type="number" id="students-0" min="0" value="0" oninput="calc()"></td>
           <td class="right"><span class="row-total" id="total-0">0원</span></td>
         </tr>
         <tr>
-          <td>
-            <div class="product-name">토도수학</div>
-            <div class="unit-price">월 6,500원/명</div>
-          </td>
+          <td><div class="product-name">토도수학</div><div class="unit-price">월 6,500원/명</div></td>
           <td class="center"><input type="number" id="months-1" min="0" value="0" oninput="calc()"></td>
           <td class="center"><input type="number" id="students-1" min="0" value="0" oninput="calc()"></td>
           <td class="right"><span class="row-total" id="total-1">0원</span></td>
         </tr>
         <tr>
-          <td>
-            <div class="product-name">토도영어</div>
-            <div class="unit-price">월 20,000원/명</div>
-          </td>
+          <td><div class="product-name">토도영어</div><div class="unit-price">월 20,000원/명</div></td>
           <td class="center"><input type="number" id="months-2" min="0" value="0" oninput="calc()"></td>
           <td class="center"><input type="number" id="students-2" min="0" value="0" oninput="calc()"></td>
           <td class="right"><span class="row-total" id="total-2">0원</span></td>
@@ -277,76 +108,13 @@
 
   <div class="btn-wrap">
     <button class="btn-reset" onclick="resetCalc()">초기화</button>
-    <button class="btn-pdf" onclick="downloadPDF()">견적서 PDF 다운로드</button>
-  </div>
-
-  <!-- 견적서 PDF 템플릿 (숨김) -->
-  <div id="quote-doc">
-    <div class="q-title">견 적 서</div>
-    <table class="q-info-table">
-      <tr>
-        <td class="label">견적일자</td>
-        <td id="q-date" colspan="3"></td>
-      </tr>
-      <tr>
-        <td class="label">공급받는자</td>
-        <td id="q-school" colspan="2"></td>
-        <td style="width:50px; text-align:center;">귀하</td>
-      </tr>
-      <tr>
-        <td class="supplier-label" rowspan="5">공급자</td>
-        <td class="label">사업자 번호</td>
-        <td colspan="2">883-86-00976</td>
-      </tr>
-      <tr>
-        <td class="label">상호명 / 대표자</td>
-        <td>주식회사 에누마코리아 / 전유택</td>
-        <td class="logo-cell" rowspan="4">
-          <img src="todo_logo.png" alt="TODO 로고">
-        </td>
-      </tr>
-      <tr>
-        <td class="label">사업장 주소</td>
-        <td>서울특별시 성동구 독섬로1나길 5, G301호</td>
-      </tr>
-      <tr>
-        <td class="label">업태/업종</td>
-        <td>서비스업, 소매업 / 소프트웨어개발 및 유통</td>
-      </tr>
-      <tr>
-        <td class="label">문의</td>
-        <td>todoclassroom@enuma.com / 02-462-9720</td>
-      </tr>
-    </table>
-
-    <table class="q-items-table">
-      <thead>
-        <tr>
-          <th style="width:8%">번호</th>
-          <th style="width:18%">상품명</th>
-          <th style="width:13%">기간(개월)</th>
-          <th style="width:13%">수량(명)</th>
-          <th style="width:13%">단가(원)</th>
-          <th style="width:13%">소계(원)</th>
-          <th style="width:22%">비고</th>
-        </tr>
-      </thead>
-      <tbody id="q-rows"></tbody>
-      <tfoot>
-        <tr class="q-total-row">
-          <td colspan="6">총 합계 금액(vat 포함)</td>
-          <td id="q-grand-total"></td>
-        </tr>
-      </tfoot>
-    </table>
+    <button class="btn-pdf" onclick="openQuote()">견적서 PDF 다운로드</button>
   </div>
 
   <script>
     const prices = [13500, 6500, 20000];
-    const productNames = ['토도한글', '토도수학', '토도영어'];
 
     function fmt(n) { return n.toLocaleString('ko-KR') + '원'; }
-    function fmtNum(n) { return n.toLocaleString('ko-KR'); }
 
     function calc() {
       let grand = 0;
@@ -370,76 +138,22 @@
       document.getElementById('school-name').value = '';
     }
 
-    function getToday() {
-      const d = new Date();
-      return d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.';
-    }
-
-    function buildQuoteRows() {
-      let rows = '';
-      let rowNum = 1;
-      let grand = 0;
-      let filledCount = 0;
-
-      for (let i = 0; i < 3; i++) {
-        const m = parseInt(document.getElementById('months-' + i).value) || 0;
-        const s = parseInt(document.getElementById('students-' + i).value) || 0;
-        const t = prices[i] * m * s;
-        grand += t;
-        const hasData = m > 0 || s > 0;
-        if (hasData) filledCount++;
-
-        let bigo = '';
-        if (m >= 4) {
-          bigo = '여름방학 1개월 무료 제공 (실 사용 기간 ' + (m + 1) + '개월 제공)';
-        }
-
-        rows += '<tr>';
-        rows += '<td>' + (hasData ? rowNum++ : '') + '</td>';
-        rows += '<td>' + (hasData ? productNames[i] : '') + '</td>';
-        rows += '<td>' + (m > 0 ? m : '') + '</td>';
-        rows += '<td>' + (s > 0 ? s : '') + '</td>';
-        rows += '<td>' + (hasData ? fmtNum(prices[i]) : '') + '</td>';
-        rows += '<td style="text-align:right;">' + (t > 0 ? fmtNum(t) : 0) + '</td>';
-        rows += '<td style="text-align:left; font-size:11px;">' + bigo + '</td>';
-        rows += '</tr>';
-      }
-
-      const extraRows = Math.max(0, 5 - filledCount);
-      for (let e = 0; e < extraRows; e++) {
-        rows += '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td style="text-align:right;">0</td><td></td></tr>';
-      }
-      rows += '<tr><td colspan="7" style="text-align:center; border:1px solid #bbb; padding:7px 6px; color:#555;">이하 여백</td></tr>';
-
-      document.getElementById('q-rows').innerHTML = rows;
-      document.getElementById('q-grand-total').textContent = fmtNum(grand) + '원';
-    }
-
-    function downloadPDF() {
+    function openQuote() {
       const school = document.getElementById('school-name').value.trim();
       if (!school) {
         alert('학교명을 입력해주세요.');
         return;
       }
-
-      document.getElementById('q-date').textContent = getToday();
-      document.getElementById('q-school').textContent = school;
-      buildQuoteRows();
-
-      const el = document.getElementById('quote-doc');
-      el.style.display = 'block';
-
-      const opt = {
-        margin: 0,
-        filename: school + '_토도견적서.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(el).save().then(() => {
-        el.style.display = 'none';
+      const params = new URLSearchParams({
+        school,
+        m0: document.getElementById('months-0').value || 0,
+        s0: document.getElementById('students-0').value || 0,
+        m1: document.getElementById('months-1').value || 0,
+        s1: document.getElementById('students-1').value || 0,
+        m2: document.getElementById('months-2').value || 0,
+        s2: document.getElementById('students-2').value || 0
       });
+      window.open('quote.html?' + params.toString(), '_blank');
     }
   </script>
 </body>
