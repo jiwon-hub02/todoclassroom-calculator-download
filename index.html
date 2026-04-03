@@ -53,16 +53,22 @@
     .btn-wrap { display: flex; gap: 10px; max-width: 680px; margin: 0 auto; }
     .btn-reset { flex: 1; padding: 10px; font-size: 14px; color: #888; background: #fff; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
     .btn-reset:hover { background: #f5f5f5; }
-    .btn-pdf { flex: 2; padding: 10px; font-size: 14px; font-weight: 500; color: #fff; background: #2f2b6b; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-pdf {
+      flex: 2; padding: 10px; font-size: 14px; font-weight: 500;
+      color: #fff; background: #2f2b6b; border: none; border-radius: 8px;
+      cursor: pointer; text-decoration: none; text-align: center;
+      display: flex; align-items: center; justify-content: center;
+    }
     .btn-pdf:hover { background: #3d3894; }
   </style>
 </head>
 <body>
+
   <div class="calc-section">
     <h2>견적 계산기</h2>
     <div class="school-input-wrap">
       <label>학교명</label>
-      <input type="text" id="school-name" placeholder="예: 서울 토도초등학교">
+      <input type="text" id="school-name" placeholder="예: 서울 토도초등학교" oninput="updateLink()">
     </div>
     <table>
       <thead>
@@ -76,20 +82,20 @@
       <tbody>
         <tr>
           <td><div class="product-name">토도한글</div><div class="unit-price">월 13,500원/명</div></td>
-          <td class="center"><input type="number" id="months-0" min="0" value="0" oninput="calc()"></td>
-          <td class="center"><input type="number" id="students-0" min="0" value="0" oninput="calc()"></td>
+          <td class="center"><input type="number" id="months-0" min="0" value="0" oninput="calc(); updateLink();"></td>
+          <td class="center"><input type="number" id="students-0" min="0" value="0" oninput="calc(); updateLink();"></td>
           <td class="right"><span class="row-total" id="total-0">0원</span></td>
         </tr>
         <tr>
           <td><div class="product-name">토도수학</div><div class="unit-price">월 6,500원/명</div></td>
-          <td class="center"><input type="number" id="months-1" min="0" value="0" oninput="calc()"></td>
-          <td class="center"><input type="number" id="students-1" min="0" value="0" oninput="calc()"></td>
+          <td class="center"><input type="number" id="months-1" min="0" value="0" oninput="calc(); updateLink();"></td>
+          <td class="center"><input type="number" id="students-1" min="0" value="0" oninput="calc(); updateLink();"></td>
           <td class="right"><span class="row-total" id="total-1">0원</span></td>
         </tr>
         <tr>
           <td><div class="product-name">토도영어</div><div class="unit-price">월 20,000원/명</div></td>
-          <td class="center"><input type="number" id="months-2" min="0" value="0" oninput="calc()"></td>
-          <td class="center"><input type="number" id="students-2" min="0" value="0" oninput="calc()"></td>
+          <td class="center"><input type="number" id="months-2" min="0" value="0" oninput="calc(); updateLink();"></td>
+          <td class="center"><input type="number" id="students-2" min="0" value="0" oninput="calc(); updateLink();"></td>
           <td class="right"><span class="row-total" id="total-2">0원</span></td>
         </tr>
       </tbody>
@@ -108,7 +114,7 @@
 
   <div class="btn-wrap">
     <button class="btn-reset" onclick="resetCalc()">초기화</button>
-    <button class="btn-pdf" onclick="openQuote()">견적서 PDF 다운로드</button>
+    <a id="quote-link" class="btn-pdf" href="#" target="_blank" onclick="return checkBeforeOpen()">견적서 PDF 다운로드</a>
   </div>
 
   <script>
@@ -121,11 +127,30 @@
       for (let i = 0; i < 3; i++) {
         const m = parseInt(document.getElementById('months-' + i).value) || 0;
         const s = parseInt(document.getElementById('students-' + i).value) || 0;
-        const t = prices[i] * m * s;
-        grand += t;
-        document.getElementById('total-' + i).textContent = fmt(t);
+        grand += prices[i] * m * s;
+        document.getElementById('total-' + i).textContent = fmt(prices[i] * m * s);
       }
       document.getElementById('grand-total').textContent = fmt(grand);
+    }
+
+    function updateLink() {
+      const school = document.getElementById('school-name').value.trim();
+      const params = new URLSearchParams();
+      params.set('school', school);
+      for (let i = 0; i < 3; i++) {
+        params.set('m' + i, document.getElementById('months-' + i).value || 0);
+        params.set('s' + i, document.getElementById('students-' + i).value || 0);
+      }
+      document.getElementById('quote-link').href = 'quote.html?' + params.toString();
+    }
+
+    function checkBeforeOpen() {
+      const school = document.getElementById('school-name').value.trim();
+      if (!school) {
+        alert('학교명을 입력해주세요.');
+        return false;
+      }
+      return true;
     }
 
     function resetCalc() {
@@ -136,25 +161,10 @@
       }
       document.getElementById('grand-total').textContent = '0원';
       document.getElementById('school-name').value = '';
+      updateLink();
     }
 
-    function openQuote() {
-      const school = document.getElementById('school-name').value.trim();
-      if (!school) {
-        alert('학교명을 입력해주세요.');
-        return;
-      }
-      const params = new URLSearchParams({
-        school,
-        m0: document.getElementById('months-0').value || 0,
-        s0: document.getElementById('students-0').value || 0,
-        m1: document.getElementById('months-1').value || 0,
-        s1: document.getElementById('students-1').value || 0,
-        m2: document.getElementById('months-2').value || 0,
-        s2: document.getElementById('students-2').value || 0
-      });
-      window.open('quote.html?' + params.toString(), '_blank');
-    }
+    updateLink();
   </script>
 </body>
 </html>
